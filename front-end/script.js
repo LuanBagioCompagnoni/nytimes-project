@@ -1,21 +1,20 @@
 const crudUrl = '../back-end/crud.php';
 const apiKey = '4GeEQXy0ttFKtsEC9NbVGmSpc66VLa84';
 
-const topStoriesUrl = `https://api.nytimes.com/svc/topstories/v2/home.json?api-key=${apiKey}`;
 const mostPopularUrl = `https://api.nytimes.com/svc/mostpopular/v2/viewed/7.json?api-key=${apiKey}`;
 
-const articlesPerPage = 6;
+const articlesPerPage = 30;
 let page = 0;
 
 window.articles = [];
 
 async function fetchTopStories() {
   try {
-    const response = await fetch(topStoriesUrl);
+    const response = await fetch(mostPopularUrl);
     const data = await response.json();
     window.articles = data.results; 
-    displayFeaturedArticle(data.results[0]); 
     displayArticles(data.results.slice(1));  
+    document.getElementById("api-list").style.display = "none";
   } catch (error) {
     console.error('Erro ao buscar top stories:', error);
   }
@@ -26,7 +25,6 @@ function displayFeaturedArticle(article) {
   featuredArticle.innerHTML = `
     <h3>${article.title}</h3>
     <p>${article.abstract}</p>
-    <a href="${article.url}" target="_blank">Read more</a>
   `;
 }
 
@@ -47,14 +45,6 @@ function displayArticles(articles) {
 
   page++;
 }
-
-document.getElementById('load-articles').addEventListener('click', () => {
-  if (window.articles && window.articles.length > page * articlesPerPage) {
-    displayArticles(window.articles);
-  } else {
-    alert('Todos os artigos foram carregados.');
-  }
-});
 
 document.getElementById('send-to-back').addEventListener('click', async () => {
   if (!window.articles || window.articles.length === 0) {
@@ -86,6 +76,7 @@ document.getElementById('send-to-back').addEventListener('click', async () => {
 // Botão para Listar Salvos
 document.getElementById("list-saved").addEventListener("click", async () => {
   try {
+    document.getElementById("list-saved").style.display = "none"
     const response = await fetch(crudUrl, { method: "GET" });
     const savedArticles = await response.json();
 
@@ -119,10 +110,26 @@ document.getElementById("list-saved").addEventListener("click", async () => {
       });
     });
 
-    document.getElementById("featured-article").style.display = "none";
-    document.querySelector(".news-list").style.display = "none";
+    document.querySelector(".news-list").style.display = "none"
+    document.getElementById("api-list").style.display = "block";
     document.getElementById("edit-article").style.display = "none";
     document.getElementById("saved-articles").style.display = "block";
+    document.getElementById("send-to-back").style.display = "none"
+  } catch (error) {
+    console.error("Erro ao listar artigos salvos:", error);
+  }
+});
+
+document.getElementById("api-list").addEventListener("click", async () => {
+  try {
+    fetchTopStories
+    document.getElementById("list-saved").style.display = "block"
+    document.getElementById("api-list").style.display = "none";
+    document.querySelector(".news-list").style.display = "block"
+    document.getElementById("edit-article").style.display = "none";
+    document.getElementById("saved-articles").style.display = "none";
+    document.getElementById("send-to-back").style.display = "block"
+
   } catch (error) {
     console.error("Erro ao listar artigos salvos:", error);
   }
@@ -140,7 +147,6 @@ async function handleEdit(id) {
 
     // Preencher os campos do formulário
     document.getElementById("saved-articles").style.display = "none";
-    document.getElementById("featured-article").style.display = "none";
     document.getElementById("edit-article").style.display = "block";
 
     document.getElementById("article-title").value = article.article.title || "";

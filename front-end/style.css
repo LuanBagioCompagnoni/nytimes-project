@@ -29,23 +29,16 @@
   
   main {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
-  .featured {
+  header {
     background-color: #f5f5f5;
     padding: 40px;
     text-align: center;
     border-bottom: 3px solid #000;
-  }
-  
-  .featured h3 {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-  
-  .featured p {
-    font-size: 1.2rem;
-    margin: 20px 0;
   }
   
   .articles-container {
@@ -86,6 +79,7 @@
     margin: 20px auto;
     padding: 10px 20px;
     background-color: #000;
+    border-radius: 5px;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -113,3 +107,79 @@
       width: 100%;
     }
   }
+
+  header {
+    display: flex;
+  }
+
+  .news-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #edit-article {
+    display: none;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  #edit-article h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #444;
+    text-align: center;
+  }
+  
+  #edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  #edit-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  #edit-form input,
+  #edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  #edit-form input:focus,
+  #edit-form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  #edit-form textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  #edit-form button {
+    background-color: #000;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  #edit-form button:hover {
+    background-color: #333;
+  }
+  
