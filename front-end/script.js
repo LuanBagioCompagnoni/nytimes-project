@@ -168,9 +168,7 @@ document.getElementById("edit-form").addEventListener("submit", async (e) => {
     if(response.ok){
       alert("Artigo atualizado com sucesso!");
 
-      document.getElementById("saved-articles").style.display = "block";
-      document.getElementById("featured-article").style.display = "none";
-      document.getElementById("edit-article").style.display = "none";
+      document.getElementById("list-saved").click();
     }
   } catch (error) {
     console.error("Erro ao atualizar artigo:", error);
