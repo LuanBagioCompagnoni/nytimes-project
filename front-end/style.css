@@ -81,17 +81,7 @@
     text-decoration: underline;
   }
   
-  #load-articles {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-
-  #send-to-back {
+  button {
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
@@ -101,11 +91,7 @@
     cursor: pointer;
   }
   
-  #load-articles:hover {
-    background-color: #333;
-  }
-
-  #send-to-back:hover {
+  button:hover {
     background-color: #333;
   }
   

@@ -41,7 +41,6 @@ function displayArticles(articles) {
     articleEl.innerHTML = `
       <h3>${article.title}</h3>
       <p>${article.abstract}</p>
-      <a href="${article.url}" target="_blank">Read more</a>
     `;
     articleContainer.appendChild(articleEl);
   });
@@ -84,5 +83,109 @@ document.getElementById('send-to-back').addEventListener('click', async () => {
   }
 });
 
+// Botão para Listar Salvos
+document.getElementById("list-saved").addEventListener("click", async () => {
+  try {
+    const response = await fetch(crudUrl, { method: "GET" });
+    const savedArticles = await response.json();
+
+    const savedContainer = document.getElementById("saved-container");
+    savedContainer.innerHTML = ""; // Limpar conteúdo antigo
+
+    savedArticles.articles.forEach((article) => {
+      const articleEl = document.createElement("article");
+      articleEl.innerHTML = `
+        <h3>${article.title}</h3>
+        <p>${article.abstract}</p>
+        <button class="delete-article" data-id="${article.id}">Deletar</button>
+        <button class="update-article" data-id="${article.id}">Editar</button>
+      `;
+      savedContainer.appendChild(articleEl);
+    });
+
+    document.querySelectorAll(".update-article").forEach((button) => {
+      button.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        await handleEdit(id); // Função para lidar com a edição
+      });
+    });
+
+    // Adicionar evento de exclusão
+    document.querySelectorAll(".delete-article").forEach((button) => {
+      button.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        await deleteArticle(id);
+        e.target.parentElement.remove(); // Remover o elemento do DOM
+      });
+    });
+
+    document.getElementById("featured-article").style.display = "none";
+    document.querySelector(".news-list").style.display = "none";
+    document.getElementById("edit-article").style.display = "none";
+    document.getElementById("saved-articles").style.display = "block";
+  } catch (error) {
+    console.error("Erro ao listar artigos salvos:", error);
+  }
+});
+
+async function handleEdit(id) {
+  console.log("ID do artigo para edição:", id);
+
+  try {
+    const response = await fetch(`${crudUrl}/${id}`);
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar artigo: ${response.statusText}`);
+    }
+    const article = await response.json();
+
+    // Preencher os campos do formulário
+    document.getElementById("saved-articles").style.display = "none";
+    document.getElementById("featured-article").style.display = "none";
+    document.getElementById("edit-article").style.display = "block";
+
+    document.getElementById("article-title").value = article.article.title || "";
+    document.getElementById("article-content").value = article.article.abstract || "";
+    document.getElementById("edit-form").dataset.id = id;
+  } catch (error) {
+    console.error("Erro ao buscar artigo para edição:", error);
+  }
+}
+
+// Submeter Formulário de Edição
+document.getElementById("edit-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = (e.target.dataset.id);
+  const title = document.getElementById("article-title").value;
+  const abstract = document.getElementById("article-content").value;
+
+  try {
+    const response = await fetch(`${crudUrl}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, abstract }),
+    });
+
+    if(response.ok){
+      alert("Artigo atualizado com sucesso!");
+
+      document.getElementById("saved-articles").style.display = "block";
+      document.getElementById("featured-article").style.display = "none";
+      document.getElementById("edit-article").style.display = "none";
+    }
+  } catch (error) {
+    console.error("Erro ao atualizar artigo:", error);
+  }
+});
+
+// Função para Deletar Artigo
+async function deleteArticle(id) {
+  try {
+    const response = await fetch(`${crudUrl}/${id}`, { method: "DELETE" });
+    const result = await response.json();
+    alert(result.message || "Artigo deletado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao deletar artigo:", error);
+  }
+}
 
 fetchTopStories()

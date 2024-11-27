@@ -8,4 +8,5 @@ CREATE TABLE articles (
     url VARCHAR(255) NOT NULL,
     byline VARCHAR(255),
     published_date DATE NOT NULL
+    abstract VARCHAR(500) NULL
 );
